@@ -23,7 +23,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW_CSV = ROOT / "ml" / "movies_raw.csv"
-OUT_JS = ROOT / "data" / "movies.js"
+OUT_JS = ROOT / "public" / "data" / "movies.js"
 TOP_N = 10
 
 
