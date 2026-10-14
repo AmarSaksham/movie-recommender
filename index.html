@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CineMatch — Movie Recommender</title>
+  <meta name="description" content="Content-based movie recommendation system using TF-IDF and cosine similarity." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <a href="#" class="brand" id="homeLink"><span class="brand-mark">▶</span>CineMatch</a>
+    <nav>
+      <a href="#browse">Browse</a>
+      <a href="#insights">Insights</a>
+      <a href="#how">How it works</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO + SEARCH -->
+    <section class="hero">
+      <p class="eyebrow">Content-based recommender · TF-IDF + cosine similarity</p>
+      <h1>Pick a movie you love.<br /><span>We'll find what to watch next.</span></h1>
+
+      <div class="search" id="search">
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.96 12.06l4.24 4.24-1.4 1.4-4.24-4.24A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"/></svg>
+        <input id="searchInput" type="text" placeholder="Search a movie… e.g. 3 Idiots" autocomplete="off" aria-label="Search a movie" />
+        <button id="surpriseBtn" class="btn-ghost" title="Random movie">🎲 <span>Surprise me</span></button>
+        <ul id="suggestions" class="suggestions" role="listbox"></ul>
+      </div>
+
+      <div class="quick">
+        <span>Try:</span>
+        <div id="quickPicks" class="chips"></div>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section id="result" class="result hidden">
+      <div class="selected" id="selected"></div>
+      <div class="section-head">
+        <h2>Because you liked <span id="selTitle"></span></h2>
+        <p class="muted">Top 10 most similar movies, ranked by cosine similarity</p>
+      </div>
+      <div class="grid" id="recGrid"></div>
+    </section>
+
+    <!-- BROWSE -->
+    <section id="browse" class="block">
+      <div class="section-head row">
+        <div>
+          <h2>Browse the catalogue</h2>
+          <p class="muted" id="browseCount"></p>
+        </div>
+        <div class="filters">
+          <select id="langFilter" aria-label="Language"></select>
+          <select id="sortBy" aria-label="Sort">
+            <option value="rating">Top rated</option>
+            <option value="new">Newest</option>
+            <option value="az">A – Z</option>
+          </select>
+        </div>
+      </div>
+      <div class="chips genre-chips" id="genreChips"></div>
+      <div class="grid small" id="browseGrid"></div>
+    </section>
+
+    <!-- INSIGHTS -->
+    <section id="insights" class="block">
+      <div class="section-head">
+        <h2>Dataset insights</h2>
+        <p class="muted">Quick exploratory analysis of the cleaned dataset</p>
+      </div>
+      <div class="tiles" id="tiles"></div>
+      <div class="charts">
+        <div class="chart-card"><h3>Top genres</h3><div id="chartGenres"></div></div>
+        <div class="chart-card"><h3>Languages</h3><div id="chartLang"></div></div>
+        <div class="chart-card"><h3>Movies by decade</h3><div id="chartDecade"></div></div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="block">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p class="muted">The full pipeline lives in <code>ml/build_model.py</code></p>
+      </div>
+      <ol class="pipeline">
+        <li><b>Movie dataset</b><span>133 Indian &amp; international films with genres, director, cast, keywords and plot.</span></li>
+        <li><b>Clean data</b><span>Drop duplicates, trim spaces, fix genre casing, fill missing values.</span></li>
+        <li><b>Combine metadata</b><span>Merge features into one “tags” text. Names are joined (<code>aamirkhan</code>) and important fields repeated for weight.</span></li>
+        <li><b>Vectorize text</b><span>TF-IDF turns each movie's tags into a numeric vector; rare, specific words get higher weight.</span></li>
+        <li><b>Cosine similarity</b><span>Similarity = cos θ = (A·B) / (‖A‖‖B‖). 1 means identical direction, 0 means nothing in common.</span></li>
+        <li><b>Recommend</b><span>Sort by similarity, skip the movie itself, return the top 10 with the reasons they matched.</span></li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built with Python (pandas, scikit-learn) and vanilla JavaScript. Posters from <a href="https://en.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>. Ratings are approximate. Personal project.</p>
+  </footer>
+
+  <script src="data/movies.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
